@@ -451,4 +451,45 @@ umask 0002
 # Therefore, we set this value here so that cgroup statistics are
 # available for the container this process will run in.
 
+host="http://elasticsearch:9200"
+user="kibana_system"
+pswd=$ELASTIC_PASSWORD
+
+function getStatusCode {
+    echo $(echo $@ | grep HTTP/1.1 | tail -1 | awk {'print $2'})
+}
+
+function checkHealthStatus {
+    resp="$(curl -X GET -u $1:$2 -sLI "$host/_cat/health")"
+    echo $( getStatusCode $resp )
+}
+
+function updatePswdForUser {
+    resp="$(curl -X POST -u elastic:$2 -sLi $host/_security/user/$1/_password \
+        -H 'Content-Type: application/json' -d '
+            {
+                "password" : "'"$2"'"
+            }
+        ')"
+    echo $( getStatusCode $resp )
+}
+
+for i in {1..10}; do
+    code=$(checkHealthStatus $user $pswd)
+    if [ ! -z $code ] && [ $code -eq 200 ]; then
+        echo “Elasticsearch started successfully!”
+        break
+    elif [ ! -z $code ] && [ $code -eq 401 ]; then
+        code=$(updatePswdForUser $user $pswd )
+        if [ ! -z $code ] && [ $code -eq 200 ]; then
+            echo "Updated pswd for $user"
+            break
+        fi
+    else
+        echo "$i/10 Waiting for the start Elasticsearch..."
+    fi
+    sleep 30
+done
+
+
 exec /usr/share/kibana/bin/kibana --ops.cGroupOverrides.cpuPath=/ --ops.cGroupOverrides.cpuAcctPath=/ ${longopts} "$@"

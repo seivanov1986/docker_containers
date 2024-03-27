@@ -20,7 +20,7 @@ kibana_build:
 		--platform linux/amd64 \
 		--no-cache \
 		-f ./kibana/Dockerfile \
-		-t kibana:8.12.2 .
+		-t kibana:8.12.3 .
 
 logstash_build:
 	docker build \
