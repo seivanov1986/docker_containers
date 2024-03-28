@@ -1,0 +1,11 @@
+version: "3.9"
+services:
+  3proxy:
+    build: ./container/
+    container_name: 3proxy.common
+    ports:
+        - "1010:1010"
+    privileged:
+       true
+    restart: always
+
