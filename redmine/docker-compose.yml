@@ -1,0 +1,35 @@
+version: "3.3"
+
+services:
+
+  redmine:
+    image: redmine
+    container_name: ${COMPOSE_PROJECT_NAME}.service
+    restart: always
+    depends_on:
+      - postgres
+    networks:
+      service:
+    env_file:
+      - service.env
+    volumes:
+      - ${F_STORAGE}:/usr/src/redmine/files
+
+
+
+  postgres:
+    image: postgres:16.1
+    container_name: ${COMPOSE_PROJECT_NAME}.postgres
+    environment:
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    env_file:
+      - postgres.env
+    volumes:
+      - ${DB_DATA}:/var/lib/postgresql/data/pgdata
+    networks:
+      service:
+    restart: always
+
+networks:
+  service:
+    name: ${COMPOSE_PROJECT_NAME}
