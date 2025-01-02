@@ -1,0 +1,36 @@
+filebeat.inputs:
+  - type: docker
+    containers:
+      path: "/var/lib/docker/containers"
+      stream: "stdout"
+      ids:
+        - "c812d569b25f85372e317a8020baa8ff1a2c15e709bacca41462a3d47047b7fa"
+      cri.parse_flags: true
+      combine_partial: true
+      exclude_files: ['\.gz$']
+
+processors:
+  - add_docker_metadata:
+      host: "unix:///var/run/docker.sock"
+
+filebeat.config.modules:
+  path: ${path.config}/modules.d/*.yml
+  reload.enabled: false
+
+output.logstash:
+  hosts: ["logstash:5044"]
+
+log files:
+logging.level: debug
+logging.to_files: true
+logging.to_syslog: false
+loggins.metrice.enabled: false
+logging.files:
+  path: /var/log/filebeat
+  name: filebeat
+  keepfiles: 7
+  permissions: 0644
+ssl.verification_mode: none
+
+setup.template.enabled: false
+setup.ilm.enabled: false
