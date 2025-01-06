@@ -1,5 +1,5 @@
 FROM ubuntu:20.04
-  
+
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update
@@ -15,9 +15,6 @@ RUN mkdir -p /var/run/sphinxsearch
 RUN mkdir -p /var/lib/sphinxsearch/data
 RUN mkdir -p /var/run/sphinxsearch/
 RUN mkdir -p /usr/local/var/data/
-
-COPY sphinx.conf /opt/sphinx-3.3.1/etc/sphinx.conf
-COPY crontab /etc/crontab
 
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh

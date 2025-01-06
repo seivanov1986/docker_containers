@@ -1,0 +1,1 @@
+* * * * * root docker exec gallery-wordpress-1 echo "Hello from app"

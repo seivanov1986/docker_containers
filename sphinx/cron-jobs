@@ -1,0 +1,1 @@
+*/5 * * * * root /opt/sphinx-3.1.1/bin/indexer --all --config /opt/sphinx-3.1.1/etc/sphinx.conf --rotate
