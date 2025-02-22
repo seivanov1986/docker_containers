@@ -1,0 +1,67 @@
+global:
+  scrape_interval: 15s  # Как часто собирать метрики
+  evaluation_interval: 15s  # Интервал оценки правил алертинга
+  scrape_timeout: 10s  # Таймаут для сбора метрик
+
+  # Настройки для внешних меток (добавляются ко всем метрикам)
+  # external_labels:
+  #   monitor: 'my-prometheus'
+  #   environment: 'production'
+
+# Настройки алертинга (интеграция с Alertmanager)
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+          - 'alertmanager:9093'  # Адрес Alertmanager
+
+# Файлы с правилами алертинга
+rule_files:
+  - '/etc/prometheus/alert.rules.yml'  # Путь к файлу с правилами алертинга
+
+# Настройки для сбора метрик (scrape_configs)
+scrape_configs:
+  # Мониторинг самого Prometheus
+  # - job_name: 'prometheus'
+  #   static_configs:
+  #     - targets: ['localhost:9090']
+
+  # Мониторинг Node Exporter
+  - job_name: node
+    static_configs:
+      - targets: ['localhost:9100']
+
+  # Мониторинг приложения (пример)
+  # - job_name: 'my_application'
+  #   metrics_path: '/metrics'  # Путь к эндпоинту метрик
+  #   static_configs:
+  #     - targets: ['app-server:8080']
+  #   relabel_configs:
+  #     - source_labels: [__address__]
+  #       target_label: __param_target
+  #     - source_labels: [__param_target]
+  #       target_label: instance
+  #     - target_label: __address__
+  #       replacement: 'blackbox-exporter:9115'  # Интеграция с Blackbox Exporter
+
+  # Мониторинг через Service Discovery (пример для Kubernetes)
+  # - job_name: 'kubernetes-pods'
+  #   kubernetes_sd_configs:
+  #     - role: pod
+  #   relabel_configs:
+  #     - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+  #       action: keep
+  #       regex: true
+  #     - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
+  #       action: replace
+  #       target_label: __metrics_path__
+  #       regex: (.+)
+  #     - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scheme]
+  #       action: replace
+  #       target_label: __scheme__
+  #       regex: (https?)
+  #     - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_port]
+  #       action: replace
+  #       target_label: __address__
+  #       regex: (.+)
+  #       replacement: $1:8080

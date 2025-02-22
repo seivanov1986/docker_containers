@@ -1,0 +1,5 @@
+telegram_token: <token>
+# template_path: "template.tmpl" # your template file name
+time_zone: "Europe/Moscow" # your time zone check it out from WIKI
+# split_token: "|" # token used for split measure label.
+# disable_notification: true  # disable notification for messages.
