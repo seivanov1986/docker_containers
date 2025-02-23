@@ -5,3 +5,7 @@
 3. создать monitoring/configs/alertmanager/alertmanager.yml на основе monitoring/configs/alertmanager/alertmanager.yml.example
 4. склонировать https://github.com/inCaller/prometheus_bot и выполнить docker build -t incaller/prometheus_bot:latest .
 5. make start
+
+
+# links
+https://grafana.com/grafana/dashboards/1860-node-exporter-full/
