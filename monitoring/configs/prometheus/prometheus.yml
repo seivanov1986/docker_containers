@@ -29,18 +29,20 @@ scrape_configs:
   # Мониторинг Node Exporter
   - job_name: node
     static_configs:
-      - targets: ['localhost:9100']
+      - targets: ['91.142.90.5:9100']
 
   # Мониторинг приложения (пример)
-  # - job_name: 'my_application'
-  #   metrics_path: '/metrics'  # Путь к эндпоинту метрик
-  #   static_configs:
-  #     - targets: ['app-server:8080']
-  #   relabel_configs:
-  #     - source_labels: [__address__]
-  #       target_label: __param_target
-  #     - source_labels: [__param_target]
-  #       target_label: instance
+  - job_name: skazhi-backend
+    metrics_path: /api/metrics  # Путь к эндпоинту метрик
+    params:
+      format: [ 'prometheus' ]
+    static_configs:
+      - targets: ['91.142.90.5']
+    # relabel_configs:
+    #   - source_labels: [__address__]
+    #     target_label: __param_target
+    #   - source_labels: [__param_target]
+    #     target_label: instance
   #     - target_label: __address__
   #       replacement: 'blackbox-exporter:9115'  # Интеграция с Blackbox Exporter
 
